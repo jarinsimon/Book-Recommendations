@@ -38,23 +38,27 @@ public class BookSelect {
         if (bookNumber <= bookJson.size()){
             System.out.println("Book #" + bookNumber + " has been chosen!\nBook Information:");
             JsonNode chosenBook = bookJson.get(bookNumber-1);
-            JsonNode bookVolumeInfo = chosenBook.path("volumeInfo");
-            String title = bookVolumeInfo.path("title").asText("No Title");
-            String subtitle = bookVolumeInfo.path("subtitle").asText("No Subtitle");
-            String author = bookVolumeInfo.path("authors").get(0).asText("Author");
-            String publishDate = bookVolumeInfo.path("publishedDate").asText("No Published Date");
-            JsonNode isbn = bookVolumeInfo.path("industryIdentifiers");
-
-            System.out.println("Title: " + title + ", Subtitle: " + subtitle + ", Author: " + author + ", Publish Date: " + publishDate.substring(0,4));
-            for (JsonNode isbnNumber: isbn){
-                String type = isbnNumber.path("type").asText("No ISBN");
-                String number = isbnNumber.path("identifier").asText("No ISBN Number");
-                System.out.println(type + ": " + number);
-            }
+            printBookInfo(chosenBook);
             scan.close();
             return chosenBook;
         }
         scan.close();
         return bookJson;
+    }
+
+    private void printBookInfo(JsonNode chosenBook){
+        JsonNode bookVolumeInfo = chosenBook.path("volumeInfo");
+        String title = bookVolumeInfo.path("title").asText("No Title");
+        String subtitle = bookVolumeInfo.path("subtitle").asText("No Subtitle");
+        String author = bookVolumeInfo.path("authors").get(0).asText("Author");
+        String publishDate = bookVolumeInfo.path("publishedDate").asText("No Published Date");
+        JsonNode isbn = bookVolumeInfo.path("industryIdentifiers");
+
+        System.out.println("Title: " + title + ", Subtitle: " + subtitle + ", Author: " + author + ", Publish Date: " + publishDate.substring(0,4));
+        for (JsonNode isbnNumber: isbn){
+            String type = isbnNumber.path("type").asText("No ISBN");
+            String number = isbnNumber.path("identifier").asText("No ISBN Number");
+            System.out.println(type + ": " + number); 
+        }
     }
 }

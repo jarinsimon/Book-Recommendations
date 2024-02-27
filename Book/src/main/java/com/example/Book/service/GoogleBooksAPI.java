@@ -33,13 +33,26 @@ public class GoogleBooksAPI {
     }
 
     private JsonNode searchBooks(String query){
-        final String uri = "https://www.googleapis.com/books/v1/volumes?q=" + query + "&key=" + apiKey;
+        String uri = "https://www.googleapis.com/books/v1/volumes?q=" + query + "&key=" + apiKey;
         String ResponseBody = restTemplate.getForObject(uri, String.class);
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode rootNode = objectMapper.readTree(ResponseBody);
             return rootNode.path("items");
             
+        } catch (JsonProcessingException e){
+            e.printStackTrace();
+            return objectMapper.createObjectNode();
+        }
+    }
+
+    public JsonNode authorRecs(String bookAuthor){
+        String uri = "https://www.googleapis.com/books/v1/volumes?q=inauthor:" + bookAuthor + "&key=" + apiKey;
+        String ResponseBody = restTemplate.getForObject(uri, String.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode rootNode = objectMapper.readTree(ResponseBody);
+            return rootNode.path("items");
         } catch (JsonProcessingException e){
             e.printStackTrace();
             return objectMapper.createObjectNode();
